@@ -1,0 +1,13 @@
+PODS:
+  - BmobSDK (1.6.5)
+  - MBProgressHUD (0.9.1)
+
+DEPENDENCIES:
+  - BmobSDK
+  - MBProgressHUD
+
+SPEC CHECKSUMS:
+  BmobSDK: 9928a9135a3a7823c6d8bd2bcd9baffeb8e6289a
+  MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
+
+COCOAPODS: 0.39.0

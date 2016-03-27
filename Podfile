@@ -1,0 +1,3 @@
+pod 'BmobSDK'
+pod 'MBProgressHUD'
+
