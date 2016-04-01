@@ -155,14 +155,12 @@
     NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     NSString *dicPath = [docPath stringByAppendingPathComponent:@"nameDicWithKeyOfPinyin.plist"];
     [nameDicWithKeyOfPinyin writeToFile:dicPath atomically:YES];
-//    NSLog(@"%@",dic);
     //计算所有数据总量
     _dataCount = 0;
     for (NSString *s in [dic allKeys]) {
         NSArray *sa = [dic objectForKey:s];
         _dataCount += sa.count;
     }
-    NSLog(@"应该有%d个数据",_dataCount);
     _sectionTitleArr = [sTA copy];
     return dic;
 }

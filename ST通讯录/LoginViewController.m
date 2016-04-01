@@ -59,35 +59,4 @@
     [self.loginBtn setEnabled:(self.yanzhengmaTF.text.length == 6)];
 
 }
-
-- (IBAction)resignBnt {
-    
-}
-
-- (IBAction)cancelBtn {
-}
-- (IBAction)getYanzhengBtnClick {
-    phoneNumber = self.phoneNumberTF.text;
-    [self.getYanZhengBtn setHidden:YES];
-    [self.yanzhengmaTF setHidden:NO];
-    [BmobSMS requestSMSCodeInBackgroundWithPhoneNumber:phoneNumber andTemplate:@"双体通讯录" resultBlock:^(int number, NSError *error) {
-        NSLog(@"%@",phoneNumber);
-        if (error) {
-            NSLog(@"%@",error);
-        } else {
-            //获得smsID
-            NSLog(@"sms ID：%d",number);
-        }
-    }];
-    
-}
-- (IBAction)loginBtnClick {
-    [BmobSMS verifySMSCodeInBackgroundWithPhoneNumber:phoneNumber andSMSCode:self.yanzhengmaTF.text resultBlock:^(BOOL isSuccessful, NSError *error) {
-          if (isSuccessful) {
-            NSLog(@"%@",@"验证成功，可执行用户请求的操作");
-        } else {
-            NSLog(@"%@",error);
-        }
-    }];
-}
 @end
