@@ -83,10 +83,11 @@
         _tableView.y = 80;
     }];
     
-    NSString *name = [_dataDic objectForKey:@"name"];
+    NSString *name = _data.name;
     _nameLabel.text =  name;
     NSString *firstLetter = [[NSString stringWithFormat:@"%c",pinyinFirstLetter([name characterAtIndex:0])]uppercaseString];
     _imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"wide_%@",firstLetter]];
+    [_tableView reloadData];
 }
 
 - (void)dismissDetailView{
@@ -111,15 +112,22 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
     }
     if (indexPath.row) {
-        cell.textLabel.text = [NSString stringWithFormat:@"%@",[_dataDic objectForKey:@"tel"]];
+        cell.textLabel.text = [_data.tel stringValue];
         cell.detailTextLabel.text = @"重庆";
     }else{
-        NSNumber *classNum = [_dataDic objectForKey:@"class"];
-        NSNumber *seasonNum = [_dataDic objectForKey:@"season"];
-        if (classNum == 0) {
-            cell.textLabel.text = [NSString stringWithFormat:@"%@期项目开发中心",seasonNum];
+        NSNumber *classNum = _data.classNum;
+        NSNumber *seasonNum = _data.season;
+        if ([classNum isEqual:[NSNumber numberWithInt:0]]) {
+            cell.textLabel.textColor = [UIColor blackColor];
+            cell.textLabel.text = @"项目开发中心";
+        }else{
+            cell.textLabel.textColor = [UIColor blackColor];
+            cell.textLabel.text = [NSString stringWithFormat:@"%@期项目%@部",seasonNum,classNum];
+        }if ([_data.name isEqualToString:@"陈仲华"]) {
+            cell.textLabel.text = @"主任";
+            cell.textLabel.textColor = [UIColor orangeColor];
+
         }
-        cell.textLabel.text = [NSString stringWithFormat:@"%@期项目%@部",seasonNum,classNum];
     }
     return cell;
 }
@@ -127,7 +135,7 @@
 
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row == 1) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel://%@",[_dataDic objectForKey:@"tel"]]]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel://%@",_data.tel]]];
     }
 }
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{

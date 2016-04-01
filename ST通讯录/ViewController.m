@@ -7,42 +7,31 @@
 //
 
 #import "ViewController.h"
-#import <BmobSDK/Bmob.h>
 #import "DetailViewController.h"
-#import "pinyin.h"
-#import "ChineseString.h"
 #import "MBProgressHUD.h"
 #import "UIView+Extension.h"
 #import "MenuViewController.h"
-
+#import "DataController.h"
+#import "Contact.h"
 @interface ViewController ()<UITableViewDataSource,UITableViewDelegate,MBProgressHUDDelegate,UISearchBarDelegate,UISearchResultsUpdating,MenuViewDelegate>
-//- (IBAction)leftMenuClick:(UIBarButtonItem *)sender;
-/**
- *  顶部菜单
- */
-
-@property (nonatomic,strong) NSDictionary *dataSource;
+{
+    int dataNum;
+}
 /**
  *  所有姓名  数组
  */
-@property (nonatomic,strong) NSArray *nameArr;
-@property (nonatomic,strong) NSDictionary *nameList;
-//@property (nonatomic,strong) MBProgressHUD *HUD;
-
+@property (nonatomic,strong) NSDictionary *nameDic;
 @property (nonatomic,strong) NSArray *sectionTitleArr;
-@property (nonatomic,strong)     MBProgressHUD *HUD;
+@property (nonatomic,strong) MBProgressHUD *HUD;
+@property (nonatomic,strong) DataController *DC;
+@property (nonatomic,strong) Contact *contact;
 
 /**
  *  表格部分
  */
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (nonatomic,strong) NSDictionary *nameDicWithKeyOfPinyin;
 
 @property (nonatomic,strong) NSMutableArray *searchList;
-
-
-
-
 
 @property (nonatomic,strong) DetailViewController *DVC;
 @property (nonatomic,strong) MenuViewController *MVC;
@@ -57,8 +46,11 @@
 - (void)viewDidLoad {
     
     [self createUI];
-    [self loadDataSource];
+    self.DC = [[DataController alloc]init];
+    _nameDic = [NSMutableDictionary dictionary];
     
+    
+    [self loadDataSource];
     [super viewDidLoad];
 }
 
@@ -69,7 +61,7 @@
     _tableView.delegate = self;
     _tableView.sectionIndexColor = [UIColor colorWithRed:3.f/255 green:169.f/255 blue:244.f/255 alpha:1.0];
     
-
+    
     _searchController = [[UISearchController alloc]initWithSearchResultsController:nil];
     _searchController.searchResultsUpdater = self;
     _searchController.dimsBackgroundDuringPresentation = NO;
@@ -85,39 +77,21 @@
     [self.view addGestureRecognizer:pan];
 }
 
-- (void)loadDataSource{
-    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)firstObject];
-    NSLog(@"%@",docPath);
-    NSString *dataSourcePath = [docPath stringByAppendingString:@"/contact.plist"];
-    _dataSource = [NSDictionary dictionaryWithContentsOfFile:dataSourcePath];
-    if (_nameList == nil){
-        NSString *nameListPath = [docPath stringByAppendingString:@"/nameList.plist"];
-        _nameList = [NSDictionary dictionaryWithContentsOfFile:nameListPath];
-    }
-    if (_sectionTitleArr.count == 0) {
-        NSString *sectionTitleArrPath = [docPath stringByAppendingString:@"/sectionTitleArr.plist"];
-        _sectionTitleArr = [NSArray arrayWithContentsOfFile:sectionTitleArrPath];
-    }
-}
 #pragma mark - UITableViewDataSource & Delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     if (_searchController.active) {
         return 1;
     }else{
-        if (tableView == _tableView) {
             return _sectionTitleArr.count;
-        }else return 1;
     }
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (self.searchController.active) {
         return [self.searchList count];
     }else{
-    if (tableView == _tableView) {
-        NSArray *arr = [_nameList objectForKey:_sectionTitleArr[section]];
+        NSArray *arr = [_nameDic objectForKey:[_sectionTitleArr objectAtIndex:section]];
         return arr.count;
-    }else return 2;
     }
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -127,43 +101,59 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
     }
     if (self.searchController.active) {
-        [cell.textLabel setText:[_nameDicWithKeyOfPinyin objectForKey:_searchList[indexPath.row]]];
+//        [cell.textLabel setText:[_nameDicWithKeyOfPinyin objectForKey:_searchList[indexPath.row]]];
         cell.imageView.image = nil;
         return cell;
     }else{
-        NSArray *arr = [_nameList objectForKey:_sectionTitleArr[indexPath.section]];
-        NSString *name = arr[indexPath.row];
-        
-        NSDictionary *dic = [_dataSource objectForKey:name];
-        NSString *tel = [NSString stringWithFormat:@"%@",[dic objectForKey:@"tel"]];
-        cell.textLabel.text = name;
+//        NSArray *arr = [_nameList objectForKey:_sectionTitleArr[indexPath.section]];
+//        NSString *name = arr[indexPath.row];
+//        
+//        NSDictionary *dic = [_dataSource objectForKey:name];
+//        NSString *tel = [NSString stringWithFormat:@"%@",[dic objectForKey:@"tel"]];
+        NSArray *arr = [_nameDic objectForKey:[_sectionTitleArr objectAtIndex:indexPath.section]];
+        cell.textLabel.text = [arr objectAtIndex:indexPath.row];
         cell.detailTextLabel.textColor = [UIColor grayColor];
-        cell.detailTextLabel.text = tel;
+        
+        //从数据库查找数据
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Contact"];
+        NSPredicate *pre = [NSPredicate predicateWithFormat:@"name = %@",[arr objectAtIndex:indexPath.row]];
+        [request setPredicate:pre];
+        NSArray *data = [_DC.context executeFetchRequest:request error:nil];
+        Contact *c = [data lastObject];
+        cell.detailTextLabel.text = [c.tel stringValue];
+    
         NSString *sectionTitle = [_sectionTitleArr objectAtIndex:indexPath.section];
         cell.imageView.image = [UIImage imageNamed:sectionTitle];
         [cell.imageView.layer setCornerRadius:cell.imageView.width/2];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        
+        dataNum ++;
         return cell;
-        }
+    }
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-//    传数据到DetailViewController
-    NSArray *arrInSection = [_nameList objectForKey:[_sectionTitleArr objectAtIndex:indexPath.section]];
+    //    传数据到DetailViewController
+    NSArray *arrInSection = [_nameDic objectForKey:[_sectionTitleArr objectAtIndex:indexPath.section]];
     NSString *name = @"";
-    if (_searchController.active) {
-        name =  [_nameDicWithKeyOfPinyin objectForKey:_searchList[indexPath.row]];
-    }else{
+//    if (_searchController.active) {
+//        name =  [_nameDicWithKeyOfPinyin objectForKey:_searchList[indexPath.row]];
+//    }else{
         name = [arrInSection objectAtIndex:indexPath.row];
-    }
+//    }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [_searchController setActive:NO];
-    
-    _DVC = [[DetailViewController alloc]init];
+    if (_DVC == nil) {
+        _DVC = [[DetailViewController alloc]init];
+    }
+    if (_contact == nil) {
+        _contact = [[Contact alloc]init];
+    }
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Contact"];
+    NSPredicate *pre = [NSPredicate predicateWithFormat:@"name = %@",[arrInSection objectAtIndex:indexPath.row]];
+    [request setPredicate:pre];
+    NSArray *arr = [_DC.context executeFetchRequest:request error:nil];
+    _DVC.data = [arr lastObject];
     _DVC.view.frame = CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 64);
-    _DVC.dataDic = [_dataSource objectForKey:name];
-
     [_DVC showdetailViewInView:self.navigationController.view];
 }
 
@@ -179,10 +169,7 @@
     if (_searchController.active) {
         return nil;
     }else{
-        if (tableView == _tableView) {
-            return _sectionTitleArr[section];
-        }else
-        return nil;
+        return _sectionTitleArr[section];
     }
     
 }
@@ -205,107 +192,17 @@
     _HUD.labelText = @"正在和服务器撕扯...";
     _HUD.minShowTime = 1.5;
     [_HUD showWhileExecuting:@selector(animationHUD) onTarget:self withObject:nil animated:YES];
-    BmobQuery *query = [BmobQuery queryWithClassName:@"contact"];
-    [query orderByAscending:@"name"];
-    query.limit = 200;
-    NSNumber *classNum = [NSNumber numberWithInt:10];
-    [query whereKey:@"season" equalTo:classNum];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *array, NSError *error) {
-        NSMutableDictionary *contactsDic = [NSMutableDictionary dictionary];
-        for (BmobObject *bo in array) {
-            [bo objectForKey:@"name"];
-            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-            [dic setObject:[bo objectForKey:@"name"] forKey:@"name"];
-            [dic setObject:[bo objectForKey:@"tel"] forKey:@"tel"];
-            [dic setObject:[bo objectForKey:@"info"] forKey:@"info"];
-            [dic setObject:[bo objectForKey:@"class"] forKey:@"class"];
-            [dic setObject:[bo objectForKey:@"season"] forKey:@"season"];
-            [dic setObject:[bo objectForKey:@"objectId"] forKey:@"objectId"];
-            [contactsDic setObject:dic forKey:[dic objectForKey:@"name"]];
-        }
-
-        NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)firstObject];
-        NSString *path = [docPath stringByAppendingString:@"/contact.plist"];
-        [contactsDic writeToFile:path atomically:YES];
-        _nameArr = [contactsDic allKeys];
-        [self gettingSortedNameArr:YES];
-        [self loadDataSource];
-//        [_HUD hide:YES]
-        
-    }];
-    
+    [_DC fetchDataFromCloud];
 }
-
-- (void)gettingSortedNameArr:(BOOL)shouldSort{
-    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)firstObject];
-    NSString *path = [docPath stringByAppendingString:@"/nameList.plist"];
-    NSMutableArray *nameArrSorted = [NSMutableArray array];
-    if (shouldSort) {
-        for (NSString *name in _nameArr) {
-            ChineseString *nameString = [[ChineseString alloc]init];
-            nameString.string = [NSString stringWithString:name];
-            
-            if(nameString.string==nil){
-                nameString.string=@"";
-            }
-            
-            if(![nameString.string isEqualToString:@""]){
-                NSString *pinYinResult=[NSString string];
-                for(int j=0;j<nameString.string.length;j++){
-                    NSString *singlePinyinLetter=[[NSString stringWithFormat:@"%c",pinyinFirstLetter([nameString.string characterAtIndex:j])]uppercaseString];
-                    
-                    pinYinResult=[pinYinResult stringByAppendingString:singlePinyinLetter];
-                }
-                nameString.pinYin=pinYinResult;
-            }else{
-                nameString.pinYin=@"";
-            }
-            [nameArrSorted addObject:nameString];
-        }
-        NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"pinYin" ascending:YES]];
-        [nameArrSorted sortUsingDescriptors:sortDescriptors];
-        NSMutableDictionary *nameList = [NSMutableDictionary dictionary];
-        NSMutableArray *arr = [NSMutableArray array];
-
-        NSMutableArray *sTA = [NSMutableArray array];
-        for (int i = 0; i < nameArrSorted.count ;i ++) {
-            ChineseString *thiscs = nameArrSorted[i];
-            if (thiscs == [nameArrSorted firstObject]) {
-                [sTA addObject:[[NSString stringWithFormat:@"%c",pinyinFirstLetter([thiscs.string characterAtIndex:0])]uppercaseString]];
-                [arr addObject:thiscs.string];
-            }else{
-                ChineseString *lastcs = nameArrSorted[i-1];
-                if (pinyinFirstLetter([lastcs.string characterAtIndex:0])!=pinyinFirstLetter([thiscs.string characterAtIndex:0])) {
-                    [sTA addObject:[[NSString stringWithFormat:@"%c",pinyinFirstLetter([thiscs.string characterAtIndex:0])]uppercaseString]];
-                    
-                    [nameList setObject:arr forKey:[[NSString stringWithFormat:@"%c",pinyinFirstLetter([lastcs.string characterAtIndex:0])]uppercaseString]];
-                    arr = [NSMutableArray arrayWithObject:thiscs.string];
-                    
-                }else {
-                    [arr addObject:thiscs.string];
-                    if (thiscs == [nameArrSorted lastObject]) {
-                        [nameList setObject:arr forKey:[[NSString stringWithFormat:@"%c",pinyinFirstLetter([thiscs.string characterAtIndex:0])] uppercaseString]];
-                    }
-                }
-            }
-        }
-        _sectionTitleArr = [sTA copy];
-        [_sectionTitleArr writeToFile:[docPath stringByAppendingString:@"/sectionTitleArr.plist"] atomically:YES];
-        _nameList = nameList;
-        [nameList writeToFile:path atomically:YES];
-    }
-    NSMutableDictionary *nameDicWithKeyOfPinyin = [NSMutableDictionary dictionary];
-    for (NSString *name in _nameArr) {
-        NSString *pinyin = @"";
-        for (int i = 0; i < name.length; i++) {
-            pinyin = [pinyin stringByAppendingString:[[NSString stringWithFormat:@"%c",pinyinFirstLetter([name characterAtIndex:i])]uppercaseString]] ;
-        }
-        [nameDicWithKeyOfPinyin setValue:name  forKey:pinyin];
-    }
-    
-    [nameDicWithKeyOfPinyin writeToFile:[docPath stringByAppendingString:@"/nameDicWithKeyOfPinyin.plist"] atomically:YES];
+/**
+ *  从本地加载数据
+ */
+- (void)loadDataSource{
+    _nameDic = [_DC catchSortedNameArray];
+    _sectionTitleArr = _DC.sectionTitleArr;
     [self.tableView reloadData];
 }
+
 
 
 #pragma mark - Menu相关操作
@@ -332,20 +229,20 @@
 
 
 -(void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-    if (_nameDicWithKeyOfPinyin == nil) {
-        NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)firstObject];
-        NSString *path = [docPath stringByAppendingString:@"/nameDicWithKeyOfPinyin.plist"];
-        _nameDicWithKeyOfPinyin = [NSDictionary dictionaryWithContentsOfFile:path];
-    }
-    NSString *searchString = [self.searchController.searchBar text];
-    NSPredicate *preicate = [NSPredicate predicateWithFormat:@"SELF CONTAINS[cd] %@",searchString];
-    
-    if (_searchList !=nil) {
-        [_searchList removeAllObjects];
-    }
-    
-    self.searchList = [NSMutableArray arrayWithArray:[[_nameDicWithKeyOfPinyin allKeys] filteredArrayUsingPredicate:preicate]];
-    [self.tableView reloadData];
+//    if (_nameDicWithKeyOfPinyin == nil) {
+//        NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)firstObject];
+//        NSString *path = [docPath stringByAppendingString:@"/nameDicWithKeyOfPinyin.plist"];
+//        _nameDicWithKeyOfPinyin = [NSDictionary dictionaryWithContentsOfFile:path];
+//    }
+//    NSString *searchString = [self.searchController.searchBar text];
+//    NSPredicate *preicate = [NSPredicate predicateWithFormat:@"SELF CONTAINS[cd] %@",searchString];
+//    
+//    if (_searchList !=nil) {
+//        [_searchList removeAllObjects];
+//    }
+//    
+//    self.searchList = [NSMutableArray arrayWithArray:[[_nameDicWithKeyOfPinyin allKeys] filteredArrayUsingPredicate:preicate]];
+//    [self.tableView reloadData];
 }
 
 - (void)menuDidShow:(UIPanGestureRecognizer *)pan{
@@ -364,7 +261,7 @@
             [_MVC menuShouldDismiss];
         }else{
             [_MVC menuShouldShow];
-
+            
         }
     }
     

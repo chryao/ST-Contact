@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Contact.h"
 
 @interface DetailViewController : UIViewController
 
 
-@property (nonatomic,strong) NSDictionary *dataDic;
+@property (nonatomic,strong) Contact *data;
 - (void)showdetailViewInView:(UIView *)view;
 @end

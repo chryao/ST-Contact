@@ -14,6 +14,9 @@
 		AF60A4561CA824E000EEF460 /* REAME.md in Sources */ = {isa = PBXBuildFile; fileRef = AF60A4551CA824E000EEF460 /* REAME.md */; };
 		AF6EA8031C8DAA2C0090FC34 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF6EA8021C8DAA2C0090FC34 /* CoreLocation.framework */; };
 		AF6EA8051C8DAA3F0090FC34 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF6EA8041C8DAA3F0090FC34 /* SystemConfiguration.framework */; };
+		AF82B6AD1CAD7CFB00AD4727 /* Contacts.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AF82B6AB1CAD7CFB00AD4727 /* Contacts.xcdatamodeld */; };
+		AF82B6CA1CAE027600AD4727 /* Contact+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = AF82B6C71CAE027600AD4727 /* Contact+CoreDataProperties.m */; };
+		AF82B6CB1CAE027600AD4727 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = AF82B6C91CAE027600AD4727 /* Contact.m */; };
 		AFC179B61C4C965D00BE38A0 /* UIView+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = AFC179B51C4C965D00BE38A0 /* UIView+Extension.m */; };
 		AFD985FE1C43C76300D12BB6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AFD985FD1C43C76300D12BB6 /* main.m */; };
 		AFD986011C43C76300D12BB6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AFD986001C43C76300D12BB6 /* AppDelegate.m */; };
@@ -62,6 +65,11 @@
 		AF6EA8021C8DAA2C0090FC34 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		AF6EA8041C8DAA3F0090FC34 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		AF6EA8081C8DACF70090FC34 /* BmobMessageSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BmobMessageSDK.framework; path = Pods/BmobMessageSDK/BmobMessageSDK.framework; sourceTree = "<group>"; };
+		AF82B6AC1CAD7CFB00AD4727 /* Contacts.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Contacts.xcdatamodel; sourceTree = "<group>"; };
+		AF82B6C61CAE027600AD4727 /* Contact+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Contact+CoreDataProperties.h"; sourceTree = "<group>"; };
+		AF82B6C71CAE027600AD4727 /* Contact+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Contact+CoreDataProperties.m"; sourceTree = "<group>"; };
+		AF82B6C81CAE027600AD4727 /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
+		AF82B6C91CAE027600AD4727 /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
 		AFC179B41C4C965D00BE38A0 /* UIView+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+Extension.h"; path = "../../源码收集/UIView Extension/UIView+Extension.h"; sourceTree = "<group>"; };
 		AFC179B51C4C965D00BE38A0 /* UIView+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+Extension.m"; path = "../../源码收集/UIView Extension/UIView+Extension.m"; sourceTree = "<group>"; };
 		AFD985F91C43C76300D12BB6 /* ST通讯录.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ST通讯录.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -214,6 +222,11 @@
 				AFF94A821C4A81E2005ECA72 /* ChineseString.m */,
 				AF5F11231CA7C5A3003A32A2 /* DataController.h */,
 				AF5F11241CA7C5A3003A32A2 /* DataController.m */,
+				AF82B6AB1CAD7CFB00AD4727 /* Contacts.xcdatamodeld */,
+				AF82B6C61CAE027600AD4727 /* Contact+CoreDataProperties.h */,
+				AF82B6C71CAE027600AD4727 /* Contact+CoreDataProperties.m */,
+				AF82B6C81CAE027600AD4727 /* Contact.h */,
+				AF82B6C91CAE027600AD4727 /* Contact.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -442,6 +455,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF82B6CB1CAE027600AD4727 /* Contact.m in Sources */,
 				AF60A4561CA824E000EEF460 /* REAME.md in Sources */,
 				AFF94A891C4A82BD005ECA72 /* pinyin.c in Sources */,
 				AFC179B61C4C965D00BE38A0 /* UIView+Extension.m in Sources */,
@@ -449,11 +463,13 @@
 				AFD986011C43C76300D12BB6 /* AppDelegate.m in Sources */,
 				AFF94A831C4A81E2005ECA72 /* ChineseString.m in Sources */,
 				AF5F11251CA7C5A3003A32A2 /* DataController.m in Sources */,
+				AF82B6CA1CAE027600AD4727 /* Contact+CoreDataProperties.m in Sources */,
 				AFD985FE1C43C76300D12BB6 /* main.m in Sources */,
 				AFF41C2D1C4559C3002031BE /* DetailContactCell.m in Sources */,
 				AFEB64351C8D94A00024AB24 /* LoginViewController.m in Sources */,
 				AFF41C291C454DAF002031BE /* DetailViewController.m in Sources */,
 				AF17BC9F1C93F7BD00BC68CC /* MenuViewController.m in Sources */,
+				AF82B6AD1CAD7CFB00AD4727 /* Contacts.xcdatamodeld in Sources */,
 				AF41A24D1C8D5FA800266D3D /* PersonalViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -771,6 +787,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		AF82B6AB1CAD7CFB00AD4727 /* Contacts.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				AF82B6AC1CAD7CFB00AD4727 /* Contacts.xcdatamodel */,
+			);
+			currentVersion = AF82B6AC1CAD7CFB00AD4727 /* Contacts.xcdatamodel */;
+			path = Contacts.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = AFD985F11C43C76300D12BB6 /* Project object */;
 }
