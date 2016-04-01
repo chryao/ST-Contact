@@ -17,6 +17,7 @@
     UIView *_bgView;
     UIImageView *_imageView;
     UILabel *_nameLabel;
+    UILabel *_infoLabel;
     BOOL viewCanExit;
 }
 @end
@@ -43,14 +44,19 @@
 
     UIView *headView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, imageW, imageH)];
     _imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, imageW, imageH)];
+
     
-    _nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, _imageView.height - 45, 175, 25)];
+    _infoLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, _imageView.height - 35, self.view.width, 30)];
+    [_infoLabel setFont:[UIFont systemFontOfSize:18]];
+    [_infoLabel setTextColor:[UIColor whiteColor]];
+    
+    
+    _nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, _infoLabel.y - 30, 175, 25)];
     [_nameLabel setFont:[UIFont systemFontOfSize:35]];
     [_nameLabel setTextColor:[UIColor whiteColor]];
-    
     [headView addSubview:_imageView];
     [headView addSubview:_nameLabel];
-
+    [headView addSubview:_infoLabel];
     
     
     _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, self.view.height, imageW, self.view.height - 80) style:UITableViewStylePlain];
@@ -85,8 +91,15 @@
     
     NSString *name = _data.name;
     _nameLabel.text =  name;
+    
     NSString *firstLetter = [[NSString stringWithFormat:@"%c",pinyinFirstLetter([name characterAtIndex:0])]uppercaseString];
     _imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"wide_%@",firstLetter]];
+    NSString *info = _data.info;
+    if (info.length == 0) {
+        _infoLabel.text = @"暂无职位信息";
+    }else {
+        _infoLabel.text = info;
+    }
     [_tableView reloadData];
 }
 
@@ -123,7 +136,7 @@
         }else{
             cell.textLabel.textColor = [UIColor blackColor];
             cell.textLabel.text = [NSString stringWithFormat:@"%@期项目%@部",seasonNum,classNum];
-        }if ([_data.name isEqualToString:@"陈仲华"]) {
+        }if ([_data.name isEqualToString:@"陈仲华"]){
             cell.textLabel.text = @"主任";
             cell.textLabel.textColor = [UIColor orangeColor];
 

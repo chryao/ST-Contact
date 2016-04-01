@@ -126,7 +126,7 @@
 //    for (ChineseString *c in nameArrSorted) {
 //        [arr addObject:c.string];
 //    }
-    //得到拼音索引数组
+    //得到拼音数组
     NSMutableArray *sTA = [NSMutableArray array];
     NSMutableArray *arr = [NSMutableArray array];
     for (int i = 0; i < nameArrSorted.count ;i ++) {
@@ -147,8 +147,15 @@
         }
         [arr addObject:thiscs.string];
     }
+    //得到以拼音key字典
+    NSMutableDictionary *nameDicWithKeyOfPinyin = [NSMutableDictionary dictionary];
+    for (ChineseString *cs in nameArrSorted) {
+        [nameDicWithKeyOfPinyin setObject:cs.string forKey:cs.pinYin];
+    }
+    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *dicPath = [docPath stringByAppendingPathComponent:@"nameDicWithKeyOfPinyin.plist"];
+    [nameDicWithKeyOfPinyin writeToFile:dicPath atomically:YES];
 //    NSLog(@"%@",dic);
-    
     //计算所有数据总量
     _dataCount = 0;
     for (NSString *s in [dic allKeys]) {

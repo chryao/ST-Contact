@@ -25,6 +25,8 @@
 @property (nonatomic,strong) MBProgressHUD *HUD;
 @property (nonatomic,strong) DataController *DC;
 @property (nonatomic,strong) Contact *contact;
+@property (nonatomic,strong) NSDictionary *nameDicWithKeyOfPinyin;
+
 
 /**
  *  表格部分
@@ -101,15 +103,10 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
     }
     if (self.searchController.active) {
-//        [cell.textLabel setText:[_nameDicWithKeyOfPinyin objectForKey:_searchList[indexPath.row]]];
+        [cell.textLabel setText:[_nameDicWithKeyOfPinyin objectForKey:_searchList[indexPath.row]]];
         cell.imageView.image = nil;
         return cell;
     }else{
-//        NSArray *arr = [_nameList objectForKey:_sectionTitleArr[indexPath.section]];
-//        NSString *name = arr[indexPath.row];
-//        
-//        NSDictionary *dic = [_dataSource objectForKey:name];
-//        NSString *tel = [NSString stringWithFormat:@"%@",[dic objectForKey:@"tel"]];
         NSArray *arr = [_nameDic objectForKey:[_sectionTitleArr objectAtIndex:indexPath.section]];
         cell.textLabel.text = [arr objectAtIndex:indexPath.row];
         cell.detailTextLabel.textColor = [UIColor grayColor];
@@ -134,22 +131,19 @@
     //    传数据到DetailViewController
     NSArray *arrInSection = [_nameDic objectForKey:[_sectionTitleArr objectAtIndex:indexPath.section]];
     NSString *name = @"";
-//    if (_searchController.active) {
-//        name =  [_nameDicWithKeyOfPinyin objectForKey:_searchList[indexPath.row]];
-//    }else{
+    if (_searchController.active) {
+        name =  [_nameDicWithKeyOfPinyin objectForKey:_searchList[indexPath.row]];
+    }else{
         name = [arrInSection objectAtIndex:indexPath.row];
-//    }
+    }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [_searchController setActive:NO];
     if (_DVC == nil) {
         _DVC = [[DetailViewController alloc]init];
     }
-    if (_contact == nil) {
-        _contact = [[Contact alloc]init];
-    }
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Contact"];
-    NSPredicate *pre = [NSPredicate predicateWithFormat:@"name = %@",[arrInSection objectAtIndex:indexPath.row]];
+    NSPredicate *pre = [NSPredicate predicateWithFormat:@"name = %@",name];
     [request setPredicate:pre];
     NSArray *arr = [_DC.context executeFetchRequest:request error:nil];
     _DVC.data = [arr lastObject];
@@ -176,9 +170,9 @@
 
 
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    _DVC = segue.destinationViewController;
-}
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+//    _DVC = segue.destinationViewController;
+//}
 
 #pragma mark - 数据相关
 /**
@@ -229,20 +223,20 @@
 
 
 -(void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-//    if (_nameDicWithKeyOfPinyin == nil) {
-//        NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)firstObject];
-//        NSString *path = [docPath stringByAppendingString:@"/nameDicWithKeyOfPinyin.plist"];
-//        _nameDicWithKeyOfPinyin = [NSDictionary dictionaryWithContentsOfFile:path];
-//    }
-//    NSString *searchString = [self.searchController.searchBar text];
-//    NSPredicate *preicate = [NSPredicate predicateWithFormat:@"SELF CONTAINS[cd] %@",searchString];
-//    
-//    if (_searchList !=nil) {
-//        [_searchList removeAllObjects];
-//    }
-//    
-//    self.searchList = [NSMutableArray arrayWithArray:[[_nameDicWithKeyOfPinyin allKeys] filteredArrayUsingPredicate:preicate]];
-//    [self.tableView reloadData];
+    if (_nameDicWithKeyOfPinyin == nil) {
+        NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)firstObject];
+        NSString *path = [docPath stringByAppendingPathComponent:@"nameDicWithKeyOfPinyin.plist"];
+        _nameDicWithKeyOfPinyin = [NSDictionary dictionaryWithContentsOfFile:path];
+    }
+    NSString *searchString = [self.searchController.searchBar text];
+    NSPredicate *preicate = [NSPredicate predicateWithFormat:@"SELF CONTAINS[cd] %@",searchString];
+    
+    if (_searchList !=nil) {
+        [_searchList removeAllObjects];
+    }
+    
+    self.searchList = [NSMutableArray arrayWithArray:[[_nameDicWithKeyOfPinyin allKeys] filteredArrayUsingPredicate:preicate]];
+    [self.tableView reloadData];
 }
 
 - (void)menuDidShow:(UIPanGestureRecognizer *)pan{
@@ -278,7 +272,6 @@
         default:
             break;
     }
-    NSLog(@"点击了目录(%ld)选项",(long)tag);
 }
 
 
