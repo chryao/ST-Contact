@@ -11,7 +11,6 @@
 		AF17BC9F1C93F7BD00BC68CC /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF17BC9E1C93F7BD00BC68CC /* MenuViewController.m */; };
 		AF41A24D1C8D5FA800266D3D /* PersonalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF41A24C1C8D5FA800266D3D /* PersonalViewController.m */; };
 		AF5F11251CA7C5A3003A32A2 /* DataController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF5F11241CA7C5A3003A32A2 /* DataController.m */; };
-		AF60A4561CA824E000EEF460 /* REAME.md in Sources */ = {isa = PBXBuildFile; fileRef = AF60A4551CA824E000EEF460 /* REAME.md */; };
 		AF6EA8031C8DAA2C0090FC34 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF6EA8021C8DAA2C0090FC34 /* CoreLocation.framework */; };
 		AF6EA8051C8DAA3F0090FC34 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF6EA8041C8DAA3F0090FC34 /* SystemConfiguration.framework */; };
 		AF82B6AD1CAD7CFB00AD4727 /* Contacts.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AF82B6AB1CAD7CFB00AD4727 /* Contacts.xcdatamodeld */; };
@@ -61,7 +60,6 @@
 		AF41A24C1C8D5FA800266D3D /* PersonalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonalViewController.m; sourceTree = "<group>"; };
 		AF5F11231CA7C5A3003A32A2 /* DataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataController.h; sourceTree = "<group>"; };
 		AF5F11241CA7C5A3003A32A2 /* DataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataController.m; sourceTree = "<group>"; };
-		AF60A4551CA824E000EEF460 /* REAME.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = REAME.md; sourceTree = "<group>"; };
 		AF6EA8021C8DAA2C0090FC34 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		AF6EA8041C8DAA3F0090FC34 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		AF6EA8081C8DACF70090FC34 /* BmobMessageSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BmobMessageSDK.framework; path = Pods/BmobMessageSDK/BmobMessageSDK.framework; sourceTree = "<group>"; };
@@ -152,7 +150,6 @@
 		AFD985F01C43C76300D12BB6 = {
 			isa = PBXGroup;
 			children = (
-				AF60A4551CA824E000EEF460 /* REAME.md */,
 				AFD985FB1C43C76300D12BB6 /* ST通讯录 */,
 				AFD986151C43C76300D12BB6 /* ST通讯录Tests */,
 				AFD986201C43C76300D12BB6 /* ST通讯录UITests */,
@@ -456,7 +453,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF82B6CB1CAE027600AD4727 /* Contact.m in Sources */,
-				AF60A4561CA824E000EEF460 /* REAME.md in Sources */,
 				AFF94A891C4A82BD005ECA72 /* pinyin.c in Sources */,
 				AFC179B61C4C965D00BE38A0 /* UIView+Extension.m in Sources */,
 				AFD986041C43C76300D12BB6 /* ViewController.m in Sources */,
